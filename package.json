@@ -1,0 +1,16 @@
+{
+  "name": "backend-social-media-app",
+  "version": "1.0.0",
+  "description": "Backend Social Media App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Daniel Unapanta",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^2.18.2",
+    "graphql": "^15.3.0",
+    "mongoose": "^5.10.9"
+  }
+}
