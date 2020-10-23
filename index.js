@@ -8,7 +8,8 @@ const { MONGODB } = require('./config.js');
 
 const server = new ApolloServer({
     typeDefs,
-    resolvers
+    resolvers,
+    context: ({ req }) => ({ req }) //se puede acceder request body desde context para hacer middleware token
 })
 
 mongoose.connect(MONGODB, { useNewUrlParser: true })
