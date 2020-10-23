@@ -28,3 +28,21 @@ module.exports.validateRegisterInput = (
         valid: Object.keys(errors).length < 1
     }
 }
+
+module.exports.validateLoginInput = (username, password) => {
+    const errors = {}
+
+    if(username.trim() === ''){
+        errors.username = 'Ingrese el nombre de usuario'
+    }
+
+    if(password === ''){
+        errors.password = 'Ingrese la contraseña'
+    }
+
+    return {
+        errors,
+        // si valid es true significa no hay errores
+        valid: Object.keys(errors).length < 1
+    }
+}

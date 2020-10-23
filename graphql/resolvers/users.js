@@ -4,7 +4,19 @@ const { UserInputError } = require('apollo-server')
 
 const { SECRET_KEY } = require('../../config')
 const User = require('../../models/User');
-const { validateRegisterInput } = require('../../util/validators');
+const { validateRegisterInput, validateLoginInput } = require('../../util/validators');
+
+function generateToken( user ) {
+    return jwt.sign(
+        {
+            id: user.id,
+            email: user.email,
+            username: user.username
+        }, 
+        SECRET_KEY, 
+        { expiresIn: '1h'}
+    );
+}
 
 module.exports = {
     Mutation: {
@@ -44,15 +56,43 @@ module.exports = {
 
             const res = await newUser.save();
 
-            const token = jwt.sign({
-                id: res.id,
-                email: res.email,
-                username: res.username
-            }, SECRET_KEY, { expiresIn: '1h'});
+            const token = generateToken(res)
 
             return {
                 ...res._doc,
                 id: res._id, 
+                token
+
+            }
+        },
+
+        //Login
+        async login(parent, { username, password }) {
+            const {errors, valid} = validateLoginInput(username, password);
+            const user = await User.findOne({username})
+
+            if(!valid){
+                throw new UserInputError('Errores', { errors });
+            }
+
+            if(!user){
+                errors.general = 'User not found'
+                throw new UserInputError('Usuario no encontrado', { errors });
+            }
+
+            // comparar contraseña ingresada con la del usuario para hacer login
+            const match = await bcryptjs.compare(password, user.password);
+            if (!match) {
+                errors.general = 'Wrong credentials'
+                throw new UserInputError('Credenciales Incorrectas', { errors });
+            }
+
+            // si llega aqui se debe hacer login exitoso
+            const token = generateToken(user);
+
+            return {
+                ...user._doc,
+                id: user._id, 
                 token
 
             }
