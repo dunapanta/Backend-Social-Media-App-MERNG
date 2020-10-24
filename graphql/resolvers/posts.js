@@ -32,7 +32,10 @@ module.exports = {
         async createPost(parent, { body }, context){
             // solo cuando el usuario tiene el token de autenticacion
             const user = checkAuth(context);
-            console.log(user);
+            
+            if(args.body.trim() === ''){
+                throw new Error('Post body must not be empty');
+            }
 
             // si el codigo llega hasta aqui el token es valido
             const newPost = new Post({
