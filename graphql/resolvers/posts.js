@@ -33,7 +33,7 @@ module.exports = {
             // solo cuando el usuario tiene el token de autenticacion
             const user = checkAuth(context);
             
-            if(args.body.trim() === ''){
+            if(body.trim() === ''){
                 throw new Error('Post body must not be empty');
             }
 
